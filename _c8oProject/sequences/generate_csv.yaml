@@ -21,7 +21,7 @@ comment: |
   <b>items</b> and <b>column_itemX</b> names can be whatever but <b>type</b> value must be respected.
   
   Used through Convertigo UrlMapper, the callback uri redirection can be overriden using the symbol <b>header.location.callback_uri</b>
-  <br/>Default is set to <b>../../projects/csv_response/.cxml?__sequence=generate_csv</b>
+  <br/>Default is set to <b>../../projects/lib_csv_response/.cxml?__sequence=generate_csv</b>
   <br/>You can change project name and sequence name if you want to import the library sequence in your own project.'
 sheetLocation: 1
 ↓jIf [steps.IfStep-1698916636881]: 

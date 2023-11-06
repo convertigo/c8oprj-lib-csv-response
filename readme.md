@@ -9,6 +9,7 @@ Supports direct call in .cxml or through UrlMapper.
 
 For more technical informations : [documentation](./project.md)
 
+- [Installation](#installation)
 - [Sequences](#sequences)
     - [api_data_pure](#api_data_pure)
     - [generate_csv](#generate_csv)
@@ -18,6 +19,28 @@ For more technical informations : [documentation](./project.md)
         - [/people/{nb_lines}](#people{nb_lines})
             - [Operations](#operations)
                 - [GetOperation](#getoperation)
+
+
+## Installation
+
+1. In your Convertigo Studio use `File->Import->Convertigo->Convertigo Project` and hit the `Next` button
+2. In the dialog `Project remote URL` field, paste the text below:
+   <table>
+     <tr><td>Usage</td><td>Click the copy button</td></tr>
+     <tr><td>To contribute</td><td>
+
+     ```
+     lib_csv_response=https://github.com/convertigo/c8oprj-lib-csv-response.git:branch=master
+     ```
+     </td></tr>
+     <tr><td>To simply use</td><td>
+
+     ```
+     lib_csv_response=https://github.com/convertigo/c8oprj-lib-csv-response/archive/master.zip
+     ```
+     </td></tr>
+    </table>
+3. Click the `Finish` button. This will automatically import the __lib_csv_response__ project
 
 
 ## Sequences
@@ -61,7 +84,7 @@ Data source response has to be of the following form:
 <b>items</b> and <b>column_itemX</b> names can be whatever but <b>type</b> value must be respected.
 
 Used through Convertigo UrlMapper, the callback uri redirection can be overriden using the symbol <b>header.location.callback_uri</b>
-<br/>Default is set to <b>../../projects/csv_response/.cxml?__sequence=generate_csv</b>
+<br/>Default is set to <b>../../projects/lib_csv_response/.cxml?__sequence=generate_csv</b>
 <br/>You can change project name and sequence name if you want to import the library sequence in your own project.
 
 **variables**
