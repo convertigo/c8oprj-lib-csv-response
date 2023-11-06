@@ -1,0 +1,26 @@
+comment: Sample data source to demonstrate plain text output via UrlMapper.
+path: /people/{nb_lines}
+↓GetOperation [rest.GetOperation]: 
+  comment: |
+    <b>GET</b> operation that calls the plain text (CSV) library.
+     <br/>All parameters starting with '<b>_use_</b>' are only transmitted to the library sequence.
+     <br/>All other parameters are transmitted to the target data source sequence.
+  outputContent: toXml
+  targetRequestable: lib_csv_response.generate_csv
+  ↓nb_lines [rest.PathParameter-1698677958592]: 
+    comment: Parameter transmitted to the data source sequence
+    value: 10
+  ↓_use_redirect [rest.QueryParameter-1698918848723]: 
+    comment: Must be set to <b>true</b> here. Only transmitted to the library sequence.
+    value: true
+  ↓_use_sequence_data [rest.QueryParameter-1698918848723]: 
+    comment: |
+      Data sequence to call in form <b>&lt;project_name&gt;.&lt;sequence_name&gt;</b>
+      Only transmitted to the library sequence.
+    value: lib_csv_response.api_data_pure
+  ↓_use_separator [rest.QueryParameter-1698918848723]: 
+    comment: Defines the separator between the data of a line. Only transmitted to the library sequence.
+    value: '|'
+  ↓_use_title [rest.QueryParameter-1698918848723]: 
+    comment: Generates title line from data source tags/keys. Only transmitted to the library sequence.
+    value: true

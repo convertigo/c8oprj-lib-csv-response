@@ -1,0 +1,92 @@
+comment: Sample sequence that genarates fictive data.
+↓Read_XML [steps.ReadXMLStep-1698419972021]: 
+  dataFile: '".//data/People_10.xml"'
+↓people [steps.JsonArrayStep-1698419972024]: 
+  key: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+      - SmartType: 
+        - ↑mode: PLAIN
+        - →→: people
+  ↓Iterator [steps.IteratorStep-1698419972027]: 
+    condition: nb_lines*1
+    sourceDefinition: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+        - com.twinsoft.convertigo.beans.common.XMLVector: 
+          - java.lang.String: 
+            - ↑value: 1698419972021
+          - java.lang.String: 
+            - ↑value: ./People
+    ↓Object [steps.JsonObjectStep-1698419972030]: 
+      ↓firstname [steps.JsonFieldStep-1698419972033]: 
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: firstname
+        value: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1698419972027
+                - java.lang.String: 
+                  - ↑value: ./firstname/text()
+      ↓lastname [steps.JsonFieldStep-1698419972036]: 
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: lastname
+        value: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1698419972027
+                - java.lang.String: 
+                  - ↑value: ./lastname/text()
+      ↓email [steps.JsonFieldStep-1698419972039]: 
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: email
+        value: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1698419972027
+                - java.lang.String: 
+                  - ↑value: ./email/text()
+      ↓company [steps.JsonFieldStep-1698419972042]: 
+        key: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: PLAIN
+              - →→: company
+        value: 
+          - xmlizable: 
+            - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+            - SmartType: 
+              - ↑mode: SOURCE
+              - com.twinsoft.convertigo.beans.common.XMLVector: 
+                - java.lang.String: 
+                  - ↑value: 1698419972027
+                - java.lang.String: 
+                  - ↑value: ./company/text()
+↓nb_lines [variables.RequestableVariable-1699021042620]: 
+  comment: Number of lines to return. Max and default to 10.
+  value: 10

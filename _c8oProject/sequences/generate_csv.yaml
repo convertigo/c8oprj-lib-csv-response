@@ -1,0 +1,187 @@
+comment: |
+  'Sequence to generate plain text output from a data source.
+  Data source response has to be of the following form:
+  
+  ```
+  <document>
+      <items type="array">
+          <Object type="object">
+              <column_item1 type="string">item value</item1>
+              <column_item2 type="string">item value</item2>
+              <column_itemN type="string">item value</itemN>
+          </Object>
+          <Object type="object">
+            ...
+          </Object>
+          ...
+      </items>
+  <document>
+  ```
+  
+  <b>items</b> and <b>column_itemX</b> names can be whatever but <b>type</b> value must be respected.
+  
+  Used through Convertigo UrlMapper, the callback uri redirection can be overriden using the symbol <b>header.location.callback_uri</b>
+  <br/>Default is set to <b>../../projects/csv_response/.cxml?__sequence=generate_csv</b>
+  <br/>You can change project name and sequence name if you want to import the library sequence in your own project.'
+sheetLocation: 1
+↓jIf [steps.IfStep-1698916636881]: 
+  condition: _use_redirect == "true"
+  ↓transmit_variables [steps.SimpleStep-1698939015441]: 
+    expression: |
+      'var parameters = "";
+      map = context.requestedObject.variables;
+      
+      for (var iter = map.entrySet().iterator(); iter.hasNext();) {
+        var entry = iter.next();
+        var key = entry.getKey();
+        var value = entry.getValue();
+        if(key.indexOf("_use_redirect") != 0){
+      	  log.warning(key + " => " + value);
+      	  parameters += "&" + key + "=" + encodeURIComponent(value);
+        }
+      }'
+  ↓header_Location [steps.SetResponseHeaderStep-1698916506129]: 
+    headerName: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: Location
+    headerValue: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: JS
+          - →→: '"${header.location.callback_uri=../../projects/lib_csv_response/.cxml?__sequence=generate_csv}" + parameters'
+  ↓HTTP_302_Found [steps.SetResponseStatusStep-1698917917614]: 
+    statusCode: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: 302
+    statusText: 
+      - xmlizable: 
+        - ↑classname: com.twinsoft.convertigo.beans.steps.SmartType
+        - SmartType: 
+          - ↑mode: PLAIN
+          - →→: Found
+  ↓Return [steps.ReturnStep-1698916675556]: 
+↓execute_data_sequence [steps.SimpleStep-1698920927260]: 
+  expression: |
+    'var theApp = com.twinsoft.convertigo.engine.Engine.theApp;
+    var InternalHttpServletRequest = com.twinsoft.convertigo.engine.requesters.InternalHttpServletRequest;
+    var XmlToJson = com.twinsoft.convertigo.engine.util.XMLUtils.XmlToJson;
+    var InternalRequester = com.twinsoft.convertigo.engine.requesters.InternalRequester;
+    var HashMap = java.util.HashMap;
+    var enums = com.twinsoft.convertigo.engine.enums;
+    var isStudio = com.twinsoft.convertigo.engine.Engine.isStudioMode();
+    
+    /**
+     * Parse a JSON string into a JavaScript object.
+     * 
+     * @param {string} json - The JSON string to parse.
+     * @returns {Object} The parsed JavaScript object.
+     */
+    var toJSON = function (json) {
+    	return JSON.parse(json.toString());
+    }
+    
+    map = context.requestedObject.variables;
+    
+    var project = map.containsKey("_use_sequence_data") ? (''''+map.get("_use_sequence_data")).split(".")[0] : "";
+    var sequence = map.containsKey("_use_sequence_data") ? (''''+map.get("_use_sequence_data")).split(".")[1] : "";
+    
+    var parameters = new HashMap();
+    var __project = java.lang.reflect.Array.newInstance(java.lang.String, 1);
+    __project[0] = project;
+    parameters.put("__project", __project);
+    parameters.put("__sequence", sequence);
+    parameters.put("__context", "execute_external_sequence_" + java.lang.System.currentTimeMillis());
+    
+    for (var iter = map.entrySet().iterator(); iter.hasNext();) {
+      var entry = iter.next();
+      var key = entry.getKey();
+      var value = entry.getValue();
+      if(key.indexOf("_use_") != 0){
+    	  parameters.put(key, value);
+      }
+    }
+    
+    var request = new InternalHttpServletRequest();
+    // copy session attributes for the inner call
+    var session = request.getSession(true);
+    var names = context.httpSession.getAttributeNames();
+    while (names.hasMoreElements()) {
+    	var name = names.nextElement();
+    	session.setAttribute(name, context.httpSession.getAttribute(name));
+    }
+    var requester = new InternalRequester(parameters, request);
+    let response = requester.processRequest();
+    response = toJSON(XmlToJson(response.getDocumentElement(), true, true, enums.JsonOutput.JsonRoot.docNode));
+    org.apache.log4j.MDC.put("ContextualParameters", context.logParameters);
+    if(!isStudio){
+    	var ctx2 = requester.getContext();
+    	theApp.contextManager.remove(ctx2);
+    }
+    
+    //log.warning(">>>"+JSON.stringify(response));
+    if(response["document"]){
+    	var doc_keys = Object.keys(response["document"]);
+    	//log.warning(">>>" + doc_keys);
+    	if(Array.isArray(response["document"][doc_keys[0]])){
+    		response = response["document"][doc_keys[0]];
+    	}else{
+    		response = JSON.parse(''[["ERROR IN FORMAT DATA RESPONSE"]]'');
+    		_use_title = "false";
+    	}
+    }else{
+    	response = JSON.parse(''[["NO DOCUMENT RESPONSE"]]'');
+    	_use_title = "false";
+    }
+    
+    var blank = [];
+    if(_use_title && _use_title == "true"){
+    	blank.push(Object.keys(response[0]));
+    }
+    var entries = blank.concat(response.map(x => Object.values(x)));
+    //log.warning(JSON.stringify(entries));
+    
+    // Importation des classes Java nécessaires
+    var StringWriter = java.io.StringWriter;
+    var CSVWriterBuilder = com.opencsv.CSVWriterBuilder;
+    var CSVWriter = com.opencsv.CSVWriter;
+    
+    // Création d''un StringWriter pour stocker les données CSV en mémoire
+    var stringWriter = new StringWriter();
+    
+    // Utilisation de CSVWriter pour écrire des données CSV
+    var writer = new CSVWriterBuilder(stringWriter).withSeparator((_use_separator && _use_separator != '''') ? _use_separator.charAt(0) : '','')
+    //.withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
+    //.withEscapeChar("\\")
+    .build();
+    
+    for (var i = 0; i < entries.length; i++) {
+        writer.writeNext(entries[i]);
+    }
+    writer.close();
+    
+    // Récupération des données CSV en tant que chaîne de caractères
+    var csvString = stringWriter.toString();'
+↓element [steps.ElementStep-1698663863599]: 
+  expression: csvString
+  nodeName: csv
+↓Style_sheet [core.Sheet]: 
+  url: simpler.xsl
+↓_use_separator [variables.RequestableVariable-1698662741053]: 
+  comment: Defines the separator between the data of a line.
+  value: ','
+↓_use_title [variables.RequestableVariable-1698662781724]: 
+  comment: Generates title line from data source tags/keys.
+  value: true
+↓_use_redirect [variables.RequestableVariable-1698918177334]: 
+  comment: Set the value to <b>true</b> if calling the sequence from an UrlMapper GetOperation. Leave blank if calling directly with <b>.cxml</b> servlet request.
+  value: 
+↓_use_sequence_data [variables.RequestableVariable-1698939911249]: 
+  comment: Data sequence to call in form <b>&lt;project_name&gt;.&lt;sequence_name&gt;</b>
+  value: 

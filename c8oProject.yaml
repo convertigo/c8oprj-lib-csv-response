@@ -1,0 +1,11 @@
+↑convertigo: 8.0.0.m006
+↓lib_csv_response [core.Project]: 
+  comment: |
+    Plain text output library.
+    Supports direct call in .cxml or through UrlMapper.
+  version: 1.2
+  ↓void [connectors.SqlConnector]: 🗏 connectors/void.yaml
+  ↓api_data_pure [sequences.GenericSequence]: 🗏 sequences/api_data_pure.yaml
+  ↓generate_csv [sequences.GenericSequence]: 🗏 sequences/generate_csv.yaml
+  ↓my_data_to_csv [sequences.GenericSequence]: 🗏 sequences/my_data_to_csv.yaml
+  ↓UrlMapper [core.UrlMapper]: 🗏 urlMapper.yaml

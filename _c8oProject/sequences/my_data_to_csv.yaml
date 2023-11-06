@@ -1,0 +1,15 @@
+comment: Sample sequence to transform a data source in plain text using an XSL Stylesheet (manual way, use generate_csv sequence instead).
+sheetLocation: 1
+↓Call_Sequence [steps.SequenceStep-1698666139842]: 
+  sourceSequence: lib_csv_response.api_data_pure
+↓Copy [steps.XMLCopyStep-1698666167466]: 
+  sourceDefinition: 
+    - xmlizable: 
+      - ↑classname: com.twinsoft.convertigo.beans.common.XMLVector
+      - com.twinsoft.convertigo.beans.common.XMLVector: 
+        - java.lang.String: 
+          - ↑value: 1698666139842
+        - java.lang.String: 
+          - ↑value: ./document/people
+↓Style_sheet [core.Sheet]: 
+  url: Style_sheet.xsl
